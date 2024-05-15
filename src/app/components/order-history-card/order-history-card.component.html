@@ -1,0 +1,65 @@
+<p-card [style]="{ width: '38rem' }">
+  <div class="grid">
+    <div class="col flex flex-column">
+      <div class="order-card__image-container overflow-hidden">
+        <img
+          ngSrc="/assets/coffee-with-beans.jpg"
+          alt="coffee-with-beans"
+          class="order-card__image"
+          height="500"
+          width="500"
+          priority />
+      </div>
+      <div class="font-semibold text-center">Cappucino</div>
+    </div>
+
+    <div class="col text-sm flex flex-column justify-content-between">
+      <div class="order__details">
+        <p>
+          <i class="pi pi-shop mr-1"></i>
+          Order Type: In Store Pickup
+        </p>
+        <p>
+          <i class="pi pi-calendar mr-1"></i>
+          Ordered Date: In Store Pickup
+        </p>
+        <p>
+          <i class="pi pi-info-circle mr-1"></i>
+          Order Quantity: 2
+        </p>
+        <p>
+          <i class="pi pi-money-bill mr-1"></i>
+          Total Amount: Rs. 500
+        </p>
+      </div>
+
+      <!-- action buttons -->
+      <div class="actions flex gap-3 justify-content-end">
+        <p-button
+          icon="pi pi-pencil"
+          [rounded]="true"
+          [outlined]="true"
+          pTooltip="Edit Order"
+          tooltipPosition="bottom"
+          tooltipStyleClass="text-sm"
+          size="small" />
+        <p-button
+          icon="pi pi-trash"
+          [rounded]="true"
+          [outlined]="true"
+          pTooltip="Delete order"
+          tooltipPosition="bottom"
+          tooltipStyleClass="text-sm"
+          size="small" />
+        <p-button
+          icon="pi pi-receipt"
+          [rounded]="true"
+          [outlined]="true"
+          pTooltip="Print receipt"
+          tooltipPosition="bottom"
+          tooltipStyleClass="text-sm"
+          size="small" />
+      </div>
+    </div>
+  </div>
+</p-card>

@@ -1,0 +1,5 @@
+<div *ngFor="let table of tables">
+  <p-card class="my-3 cursor-pointer" (click)="goToHomeView(table.id)">
+    <p>{{table.name}}</p>
+  </p-card>
+</div>

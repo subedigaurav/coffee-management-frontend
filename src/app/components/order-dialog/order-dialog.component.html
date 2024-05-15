@@ -1,0 +1,25 @@
+<p-dialog
+  [draggable]="false"
+  header="Order Details"
+  [modal]="true"
+  [style]="{ width: '40rem' }"
+  [(visible)]="visible"
+  (visibleChange)="onDialogClose()">
+  <span class="p-text-secondary block mb-5">Update your order.</span>
+  <form [formGroup]="formGroup">
+    <h3 class="mb-4">{{ coffee.name }}</h3>
+    <div class="flex flex-column">
+      <label class="block font-bold mb-2">No. of Cups</label>
+      <p-inputNumber inputId="total-cups" formControlName="quantity" />
+    </div>
+    <div class="my-4">
+      <span class="font-bold">Total Price:</span>
+      <span>Rs.{{ totalPrice }}</span>
+    </div>
+
+    <div class="flex gap-4 justify-content-end">
+      <p-button [outlined]="true" (click)="onDialogClose()">Cancel</p-button>
+      <p-button (click)="onPlaceOrder()">Confirm&nbsp;</p-button>
+    </div>
+  </form>
+</p-dialog>

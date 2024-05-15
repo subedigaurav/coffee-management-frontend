@@ -1,0 +1,22 @@
+.actions {
+  ::ng-deep .p-button-icon-only {
+    width: 1rem;
+    height: 1rem;
+    padding: 1rem;
+  }
+
+  .action__button {
+    margin-right: 0.5rem;
+  }
+}
+
+.order-card__image-container {
+  border-radius: 10px;
+}
+
+.order-card__image {
+  object-fit: cover;
+  width: auto;
+  max-height: 10rem;
+  max-width: 100%;
+}

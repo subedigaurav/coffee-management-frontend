@@ -1,0 +1,31 @@
+.dashboard {
+  max-width: 100vw;
+  min-height: 100vh;
+}
+
+.dashboard__container {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.dashboard__hero {
+  margin: 6rem 0;
+}
+
+.top-coffees {
+  background: white;
+  padding: 1rem;
+  border-radius: 5px;
+}
+
+.top-coffees__list {
+  border-radius: 10px;
+}
+
+.order-history {
+  padding: 1rem 0;
+}
+
+:host::ng-deep .p-card-content {
+  padding: 0 !important;
+}

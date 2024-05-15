@@ -1,0 +1,53 @@
+<div class="login flex align-items-center justify-content-center bg-orange-800">
+  <div class="login__container my-4 bg-white pr-6">
+    <div class="login__bg">
+      <img
+        class="login__image"
+        ngSrc="assets/brewing-coffee.jpg"
+        alt="brewing-coffee"
+        priority
+        fill />
+    </div>
+
+    <form class="login__form py-6 pl-3" [formGroup]="loginForm">
+      <h2>Welcome</h2>
+      <p class="text-sm mb-4">
+        Create your account and feel the personalization.
+      </p>
+
+      <div class="flex flex-column gap-2">
+        <label for="identifier">Email / Phone</label>
+        <input
+          pInputText
+          id="identifier"
+          formControlName="identifier"
+          autocomplete="identifier"
+          class="login__identifier" />
+      </div>
+
+      <div class="flex flex-column gap-2 my-4">
+        <label for="password">Password</label>
+        <p-password
+          formControlName="password"
+          id="password"
+          autocomplete="password"
+          [toggleMask]="true"
+          [feedback]="false" />
+      </div>
+
+      <p-button
+        label="Log In"
+        type="submit"
+        (click)="onFormSubmit()"></p-button>
+
+      <div class="mt-4">
+        <span>Don't have an account?</span>
+        <span
+          class="ml-1 text-orange-800 font-bold cursor-pointer"
+          routerLink="/register">
+          Sign Up
+        </span>
+      </div>
+    </form>
+  </div>
+</div>

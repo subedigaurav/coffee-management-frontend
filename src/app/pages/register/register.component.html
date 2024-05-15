@@ -1,0 +1,88 @@
+<div
+  class="register flex align-items-center justify-content-center bg-orange-800">
+  <div class="register__container my-4 bg-white pr-6">
+    <div class="register__bg">
+      <img
+        class="register__image"
+        ngSrc="assets/brewing-coffee.jpg"
+        alt="brewing-coffee"
+        priority
+        fill />
+    </div>
+
+    <form class="register__form py-6 pl-3" [formGroup]="registerForm">
+      <h2>Welcome</h2>
+      <p class="text-sm mb-4">
+        Create your account and feel the personalization.
+      </p>
+
+      <div class="flex flex-column gap-2">
+        <label for="firstName">First Name</label>
+        <input
+          pInputText
+          id="firstName"
+          formControlName="firstName"
+          autocomplete="firstName"
+          pKeyFilter="alpha"
+          class="register__firstName" />
+      </div>
+
+      <div class="flex flex-column gap-2 my-3">
+        <label for="lastName">Last Name</label>
+        <input
+          pInputText
+          id="lastName"
+          formControlName="lastName"
+          autocomplete="lastName"
+          pKeyFilter="alpha"
+          class="register__lastName" />
+      </div>
+
+      <div class="flex flex-column gap-2 my-3">
+        <label for="username">Username</label>
+        <input
+          pInputText
+          id="username"
+          formControlName="username"
+          autocomplete="username"
+          pKeyFilter="alphanum"
+          class="register__username" />
+      </div>
+
+      <div class="flex flex-column gap-2 my-3">
+        <label for="email">Email</label>
+        <input
+          pInputText
+          id="email"
+          formControlName="email"
+          autocomplete="email"
+          pKeyFilter="email"
+          class="register__email" />
+      </div>
+
+      <div class="flex flex-column gap-2 my-3">
+        <label for="password">Password</label>
+        <p-password
+          formControlName="password"
+          id="password"
+          autocomplete="password"
+          [toggleMask]="true"
+          [feedback]="false" />
+      </div>
+
+      <p-button
+        label="Create Account"
+        type="submit"
+        (click)="onFormSubmit()"></p-button>
+
+      <div class="mt-4">
+        <span>Already have an account?</span>
+        <span
+          class="ml-1 text-orange-800 font-bold cursor-pointer"
+          routerLink="/login">
+          Log In
+        </span>
+      </div>
+    </form>
+  </div>
+</div>
