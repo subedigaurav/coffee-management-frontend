@@ -4,11 +4,12 @@ import { HttpClientModule } from '@angular/common/http';
 import { TablesService } from '@services/tables/tables.service';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import {ButtonModule} from "primeng/button";
 
 @Component({
   selector: 'app-tables',
   standalone: true,
-  imports: [CommonModule, CardModule, HttpClientModule],
+  imports: [CommonModule, CardModule, HttpClientModule, ButtonModule],
   providers: [TablesService],
   templateUrl: './tables.component.html',
   styleUrl: './tables.component.css',

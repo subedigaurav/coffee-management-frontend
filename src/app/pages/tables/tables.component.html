@@ -1,5 +1,17 @@
-<div *ngFor="let table of tables">
-  <p-card class="my-3 cursor-pointer" (click)="goToHomeView(table.id)">
-    <p>{{table.name}}</p>
-  </p-card>
+<div class="tables-container">
+  <h1 class="text-center text-primary-600">Select one to continue.</h1>
+  <div class="tables">
+    <ng-container *ngFor="let table of tables">
+      <p-card
+        class="cursor-pointer shadow-1 border-1 border-primary-400 border-round"
+        (click)="goToHomeView(table.id)">
+        <span class="font-semibold text-xl text-center">{{ table.name }}</span>
+        <ng-template pTemplate="footer">
+          <div class="flex mt-1">
+            <p-button label="Select" class="w-full" styleClass="w-full" />
+          </div>
+        </ng-template>
+      </p-card>
+    </ng-container>
+  </div>
 </div>
