@@ -47,6 +47,11 @@
           autocomplete="username"
           pKeyFilter="alphanum"
           class="register__username" />
+        <p
+          class="text-sm m-0 text-red-500"
+          *ngIf="registerForm.controls.username.getError('duplicate')">
+          Username already exists.
+        </p>
       </div>
 
       <div class="flex flex-column gap-2 my-3">
@@ -58,6 +63,11 @@
           autocomplete="email"
           pKeyFilter="email"
           class="register__email" />
+        <p
+          class="text-sm m-0 text-red-500"
+          *ngIf="registerForm.controls.email.getError('duplicate')">
+          Email already exists.
+        </p>
       </div>
 
       <div class="flex flex-column gap-2 my-3">

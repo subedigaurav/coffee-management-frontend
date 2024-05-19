@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { NgOptimizedImage } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { PasswordModule } from 'primeng/password';
 import {
   FormControl,
@@ -9,15 +9,17 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { KeyFilterModule } from 'primeng/keyfilter';
 import { AuthService } from '@services/auth/auth.service';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
+import { catchError, EMPTY } from 'rxjs';
 
 @Component({
   selector: 'app-register',
   standalone: true,
   imports: [
+    CommonModule,
     ButtonModule,
     InputTextModule,
     NgOptimizedImage,
@@ -40,7 +42,10 @@ export class RegisterComponent {
     password: new FormControl(null, [Validators.required]),
   });
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   onFormSubmit() {
     this.authService
@@ -51,6 +56,25 @@ export class RegisterComponent {
         first_name: this.registerForm.value.firstName!,
         last_name: this.registerForm.value.lastName!,
       })
-      .subscribe();
+      .pipe(
+        catchError((err: HttpErrorResponse) => {
+          if (err.status === 400) {
+            const { errors } = err.error;
+            if (errors['username']) {
+              this.registerForm.controls.username.setErrors({
+                duplicate: true,
+              });
+            } else if (errors['email']) {
+              this.registerForm.controls.email.setErrors({
+                duplicate: true,
+              });
+            }
+          }
+          return EMPTY;
+        })
+      )
+      .subscribe(res => {
+        this.router.navigateByUrl('login');
+      });
   }
 }

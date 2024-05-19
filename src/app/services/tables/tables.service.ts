@@ -11,4 +11,14 @@ export class TablesService {
   getTables(): any {
     return this.httpClient.get(environment.API_URL + 'table/');
   }
+
+  payTableBill(id: number) {
+    return this.httpClient.patch(`${environment.API_URL}table/${id}/`, {
+      is_paid: true,
+    });
+  }
+
+  getAllOrders(tableId: string) {
+    return this.httpClient.get(`${environment.API_URL}order/${tableId}/`);
+  }
 }

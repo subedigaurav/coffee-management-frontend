@@ -1,0 +1,16 @@
+<div>
+  <div class="top-coffees">
+    <h2 class="text-primary text-3xl text-center">All Coffees List</h2>
+    <div class="top-coffees__list">
+      <app-top-coffees
+        [coffees]="allCoffees"
+        (order)="openOrderDialog($event)"></app-top-coffees>
+    </div>
+  </div>
+</div>
+
+<app-order-dialog
+  *ngIf="isOrderDialogVisible"
+  [coffee]="selectedCoffeeToOrder"
+  (order)="onPlaceOrder($event)"
+  (close)="isOrderDialogVisible = false"></app-order-dialog>

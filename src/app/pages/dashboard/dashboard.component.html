@@ -20,46 +20,34 @@
           label="Log Out"
           size="small"
           [outlined]="true"
-          routerLink="/logout"></p-button>
+          (click)="logout()"></p-button>
       </div>
     </div>
 
-    <div class="dashboard__hero">
-      <p class="text-primary -mb-4 text-xl">SIP, SMILE AND REPEAT.</p>
-      <h1 class="text-primary-700 text-6xl">
-        Brewing Up Smiles, One Cup at a Time.
-      </h1>
-      <p-button [outlined]="true">Explore more</p-button>
+    <div>
+      <div class="dashboard__hero">
+        <p class="text-primary -mb-4 text-xl">SIP, SMILE AND REPEAT.</p>
+        <h1 class="text-primary-700 text-6xl">
+          Brewing Up Smiles, One Cup at a Time.
+        </h1>
+        <p-button class="mr-2" [outlined]="true">Explore more</p-button>
+        <p-button
+          (click)="goToOrderView()"
+          *ngIf="currentOrder?.order?.length > 0">
+          View my orders
+        </p-button>
+      </div>
+
+      <router-outlet
+        (activate)="getOrderInfo()"
+        (detach)="getOrderInfo()"
+        (deactivate)="getOrderInfo()"></router-outlet>
     </div>
 
-    <div class="top-coffees">
-      <h2 class="text-primary text-3xl text-center">Top Three Drinks</h2>
-      <div class="top-coffees__list">
-        <app-top-coffees
-          [coffees]="topThreeCoffees"
-          (order)="openOrderDialog($event)"></app-top-coffees>
-      </div>
-    </div>
-
-    <div class="order-history">
-      <h2 class="text-primary text-3xl text-center mt-5 mb-5">
-        Your Order History
-      </h2>
-      <div class="order-history__list">
-        <app-order-history></app-order-history>
-      </div>
+    <div class="text-center bg-white mt-8 py-4">
+      <p class="text-primary font-bold text-xl">Coffee Shop 2023.</p>
     </div>
   </div>
 
-  <div class="text-center bg-white mt-8 py-4">
-    <p class="text-primary font-bold text-xl">Coffee Shop 2023.</p>
-  </div>
+  <p-toast></p-toast>
 </div>
-
-<app-order-dialog
-  *ngIf="isOrderDialogVisible"
-  [coffee]="selectedCoffeeToOrder"
-  (order)="onPlaceOrder($event)"
-  (close)="isOrderDialogVisible = false"></app-order-dialog>
-
-<p-toast></p-toast>

@@ -9,7 +9,7 @@
             class="flex flex-column md:flex-row justify-content-between md:align-items-center flex-1 gap-4">
             <img
               class="product__image"
-              ngSrc="/assets/coffee-with-beans.jpg"
+              [ngSrc]="coffee?.image ?? '/assets/coffee-with-beans.jpg'"
               [alt]="coffee.name"
               width="500"
               height="500"

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LogoutComponent } from './logout.component';
+import { TableInfoComponent } from './table-info.component';
 
-describe('LogoutComponent', () => {
-  let component: LogoutComponent;
-  let fixture: ComponentFixture<LogoutComponent>;
+describe('TableInfoComponent', () => {
+  let component: TableInfoComponent;
+  let fixture: ComponentFixture<TableInfoComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [LogoutComponent]
+      imports: [TableInfoComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(LogoutComponent);
+    fixture = TestBed.createComponent(TableInfoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

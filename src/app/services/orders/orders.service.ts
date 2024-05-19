@@ -8,6 +8,10 @@ import { environment } from '@environment';
 export class OrdersService {
   constructor(private httpClient: HttpClient) {}
 
+  getOrderDetails(orderId: string) {
+    return this.httpClient.get(environment.API_URL + `order/${orderId}/`);
+  }
+
   placeOrder(orderDetails: {
     order: any[];
     price: number;
@@ -15,5 +19,18 @@ export class OrdersService {
     table: number;
   }) {
     return this.httpClient.post(environment.API_URL + 'order/', orderDetails);
+  }
+
+  updateOrder(orderDetails: {
+    order: any[];
+    id: number;
+    price: number;
+    customer: number;
+    table: number;
+  }) {
+    return this.httpClient.patch(
+      `${environment.API_URL}order/${orderDetails.id}/`,
+      orderDetails
+    );
   }
 }

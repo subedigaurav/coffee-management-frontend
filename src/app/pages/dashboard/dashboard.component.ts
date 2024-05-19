@@ -1,19 +1,26 @@
 import { Component, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
-import { RouterLink } from '@angular/router';
+import {
+  ActivatedRoute,
+  Router,
+  RouterLink,
+  RouterOutlet,
+} from '@angular/router';
 import { AvatarModule } from 'primeng/avatar';
 import { TopCoffeesComponent } from '../../components/top-coffees/top-coffees.component';
 import { OrderHistoryComponent } from '../../components/order-history/order-history.component';
 import { OrderHistoryCardComponent } from '@components/order-history-card/order-history-card.component';
 import { OrderDialogComponent } from '@components/order-dialog/order-dialog.component';
 import { AnimateModule } from 'primeng/animate';
-import { AnimateOnScrollModule } from 'primeng/animateonscroll';
 import { CommonModule } from '@angular/common';
 import { CoffeeService } from '@services/coffee/coffee.service';
 import { HttpClientModule } from '@angular/common/http';
 import { OrdersService } from '@services/orders/orders.service';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { TableOrdersComponent } from '../table-orders/table-orders.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -30,45 +37,43 @@ import { MessageService } from 'primeng/api';
     AnimateModule,
     CommonModule,
     ToastModule,
+    ConfirmDialogModule,
+    OverlayPanelModule,
+    TableOrdersComponent,
+    RouterOutlet,
   ],
   providers: [CoffeeService, OrdersService, MessageService],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
 export class DashboardComponent implements OnInit {
-  isOrderDialogVisible = false;
-  selectedCoffeeToOrder: any;
-  topThreeCoffees: any[] = [];
+  currentOrder: any;
 
   constructor(
-    private coffeeService: CoffeeService,
-    private ordersService: OrdersService,
-    private messageService: MessageService
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
-    this.getTopThreeCoffees();
+    this.getOrderInfo();
   }
 
-  openOrderDialog($event: any) {
-    this.selectedCoffeeToOrder = $event;
-    this.isOrderDialogVisible = true;
+  logout() {
+    localStorage.clear();
+    this.router.navigate(['login']);
   }
 
-  getTopThreeCoffees() {
-    this.coffeeService.getTopThreeCoffees().subscribe((response: any) => {
-      this.topThreeCoffees = response.results;
-    });
+  getOrderInfo() {
+    const storedCurrentOrder = <string>localStorage.getItem('current-order');
+    this.currentOrder = JSON.parse(storedCurrentOrder);
   }
 
-  onPlaceOrder($event: any) {
-    this.ordersService.placeOrder($event).subscribe(() => {
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Order Placed',
-        detail: 'Your order was placed and is being processed.',
-        life: 8000,
-      });
+  goToOrderView() {
+    this.router.navigate(['order'], {
+      relativeTo: this.route,
+      queryParams: {
+        orderId: this.currentOrder.id,
+      },
     });
   }
 }

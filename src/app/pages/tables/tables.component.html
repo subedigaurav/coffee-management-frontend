@@ -3,15 +3,24 @@
   <div class="tables">
     <ng-container *ngFor="let table of tables">
       <p-card
-        class="cursor-pointer shadow-1 border-1 border-primary-400 border-round"
-        (click)="goToHomeView(table.id)">
+        class="shadow-1 border-1 border-round"
+        [class.border-primary-400]="table.status !== 'occupied'"
+        [class.border-gray-500]="table.status === 'occupied'">
         <span class="font-semibold text-xl text-center">{{ table.name }}</span>
         <ng-template pTemplate="footer">
           <div class="flex mt-1">
-            <p-button label="Select" class="w-full" styleClass="w-full" />
+            <p-button
+              (click)="onTableSelect(table)"
+              [severity]="table.status === 'occupied' ? 'info' : 'primary'"
+              [label]="table.status === 'occupied' ? 'Pay Bill' : 'Select'"
+              class="w-full"
+              styleClass="w-full" />
           </div>
         </ng-template>
       </p-card>
     </ng-container>
   </div>
 </div>
+
+
+<p-confirmDialog></p-confirmDialog>
