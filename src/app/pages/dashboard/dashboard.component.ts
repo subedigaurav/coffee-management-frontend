@@ -22,6 +22,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { TableOrdersComponent } from '../table-orders/table-orders.component';
 import { Subscription } from 'rxjs';
+import { AuthService } from '@services/auth/auth.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -54,7 +55,8 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -67,8 +69,9 @@ export class DashboardComponent implements OnInit {
   }
 
   logout() {
-    localStorage.clear();
-    this.router.navigate(['login']);
+    this.authService.logout().subscribe(_ => {
+      this.router.navigate(['login']);
+    });
   }
 
   getOrderInfo() {

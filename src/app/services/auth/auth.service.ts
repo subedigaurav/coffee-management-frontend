@@ -1,13 +1,23 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environment';
-import { tap } from 'rxjs';
+import { BehaviorSubject, Observable, of, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private httpClient: HttpClient) {}
+  loggedIn$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
+  constructor(private httpClient: HttpClient) {
+    this.loggedIn$.next(!!localStorage.getItem('auth-token'));
+  }
+
+  logout(): Observable<boolean> {
+    localStorage.removeItem('auth-token');
+    this.loggedIn$.next(false);
+    return of(true);
+  }
 
   login(credentials: { username: string; password: string }) {
     return this.httpClient
@@ -19,6 +29,7 @@ export class AuthService {
         tap((res: any) => {
           localStorage.removeItem('auth-token');
           localStorage.setItem('auth-token', res.token);
+          this.loggedIn$.next(true);
         })
       );
   }

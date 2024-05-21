@@ -1,7 +1,9 @@
 <div class="home">
   <div class="flex justify-content-between align-items-center">
-    <h1>Coffee Shop</h1>
-    <div class="home__buttons">
+    <h1 class="text-primary">Coffee Mahal</h1>
+    <div
+      class="home__buttons"
+      *ngIf="(isLoggedIn$ | async) === false; else tableNav">
       <p-button
         label="Log In"
         routerLink="/login"
@@ -13,7 +15,29 @@
 
       <p-button label="Sign Up" size="small" routerLink="/register"></p-button>
     </div>
+
+    <ng-template #tableNav>
+      <p-button
+        routerLink="/tables"
+        outlined="true"
+        size="small"
+        label="Go to Tables"></p-button>
+    </ng-template>
   </div>
 
-  <p>This is homepage</p>
+  <div class="flex flex-column">
+    <p class="text-5xl text-primary mt-8">
+      Welcome to
+      <span class="font-bold">COFEE MAHAL.</span>
+    </p>
+
+    <div class="image-container">
+      <img
+        ngSrc="assets/coffee-shop-photo.jpg"
+        width="5128"
+        height="3045"
+        priority
+        alt="Coffee Mahal photo" />
+    </div>
+  </div>
 </div>
