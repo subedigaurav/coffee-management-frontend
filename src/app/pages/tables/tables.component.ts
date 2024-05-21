@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { catchError, exhaustMap, Observable, tap } from 'rxjs';
 
 @Component({
   selector: 'app-tables',
@@ -33,9 +34,15 @@ export class TablesComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.tableService.getTables().subscribe((tables: any[]) => {
-      this.tables = tables as any[];
-    });
+    this.getTableInfo().subscribe();
+  }
+
+  getTableInfo(): Observable<any> {
+    return this.tableService.getTables().pipe(
+      tap((tables: any[]) => {
+        this.tables = tables as any[];
+      })
+    );
   }
 
   goToHomeView(id: number) {
@@ -52,22 +59,29 @@ export class TablesComponent implements OnInit {
       header: 'Are you sure to pay the bill?',
       message: `You have bill of ${table.table_amount} Please confirm to proceed.`,
       accept: () => {
-        this.tableService.payTableBill(table.id).subscribe(res => {
-          this.messageService.add({
-            severity: 'info',
-            summary: 'Confirmed',
-            detail: 'You have accepted',
-            life: 3000,
-          });
-        });
-      },
-      reject: () => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Rejected',
-          detail: 'You have rejected',
-          life: 3000,
-        });
+        this.tableService
+          .payTableBill(table.id)
+          .pipe(
+            tap(_ => {
+              this.messageService.add({
+                severity: 'info',
+                summary: 'Confirmed',
+                detail: 'You have paid the table bill.',
+                life: 3000,
+              });
+            }),
+            catchError(err => {
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Error while paying the bill.',
+                life: 3000,
+              });
+              return err;
+            }),
+            exhaustMap(_ => this.getTableInfo())
+          )
+          .subscribe();
       },
     });
   }
