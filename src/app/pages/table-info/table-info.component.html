@@ -13,4 +13,5 @@
   *ngIf="isOrderDialogVisible"
   [coffee]="selectedCoffeeToOrder"
   (order)="onPlaceOrder($event)"
+  [tableId]="tableId"
   (close)="isOrderDialogVisible = false"></app-order-dialog>

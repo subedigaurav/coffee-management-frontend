@@ -7,7 +7,7 @@ import { OrderDialogComponent } from '@components/order-dialog/order-dialog.comp
 import { OrdersService } from '@services/orders/orders.service';
 import { MessageService } from 'primeng/api';
 import { ActivatedRoute, Router } from '@angular/router';
-import { fromEvent, Subscription } from 'rxjs';
+import { filter, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-table-info',
@@ -36,11 +36,11 @@ export class TableInfoComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getAllCoffees();
-    this.getOrderInfo();
 
     this.subs.add(
-      this.route.paramMap.subscribe(res => {
+      this.route.paramMap.pipe(filter(res => Boolean(res))).subscribe(res => {
         this.tableId = Number(res.get('id'));
+        this.getOrderInfo();
       })
     );
   }
@@ -52,7 +52,9 @@ export class TableInfoComponent implements OnInit, OnDestroy {
   }
 
   getOrderInfo() {
-    const storedCurrentOrder = <string>localStorage.getItem('current-order');
+    const storedCurrentOrder = <string>(
+      localStorage.getItem(`current-order-table-${this.tableId}`)
+    );
     this.currentOrder = JSON.parse(storedCurrentOrder);
   }
 
@@ -64,17 +66,41 @@ export class TableInfoComponent implements OnInit, OnDestroy {
   onPlaceOrder($event: any) {
     if (this.currentOrder) {
       const newOrderObj = structuredClone(this.currentOrder);
-      newOrderObj.order = [...this.currentOrder.order, ...$event.order];
-      console.log('neword', newOrderObj);
+
+      // check if the coffee id already exists in the order
+      const coffeeId = $event.order[0].coffee;
+      const coffeeOrderExists = newOrderObj.order.some(
+        (order: any) => order.coffee === coffeeId
+      );
+
+      if (coffeeOrderExists) {
+        newOrderObj.order = newOrderObj.order.map((order: any) => {
+          if (order.coffee === coffeeId) {
+            order.quantity += $event.order[0].quantity;
+          }
+          return order;
+        });
+      } else {
+        newOrderObj.order = [...this.currentOrder.order, ...$event.order];
+      }
+
       this.ordersService.updateOrder(newOrderObj).subscribe((res: any) => {
-        localStorage.setItem('current-order', JSON.stringify(res));
+        const tableId = res.table;
+        localStorage.setItem(
+          `current-order-table-${tableId}`,
+          JSON.stringify(res)
+        );
         this.currentOrder = res;
         this.goToOrderView();
       });
     } else {
       this.ordersService.placeOrder($event).subscribe((res: any) => {
         this.currentOrder = res;
-        localStorage.setItem('current-order', JSON.stringify(res));
+        const tableId = res.table;
+        localStorage.setItem(
+          `current-order-table-${tableId}`,
+          JSON.stringify(res)
+        );
         this.messageService.add({
           severity: 'success',
           summary: 'Order Placed',
@@ -91,6 +117,7 @@ export class TableInfoComponent implements OnInit, OnDestroy {
       relativeTo: this.route,
       queryParams: {
         orderId: this.currentOrder.id,
+        tableId: this.tableId,
       },
     });
   }

@@ -30,6 +30,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 })
 export class OrderDialogComponent implements OnInit {
   @Input() coffee: any;
+  @Input() tableId!: number;
   @Output() close = new EventEmitter();
   @Output() order = new EventEmitter();
 
@@ -65,7 +66,7 @@ export class OrderDialogComponent implements OnInit {
       ],
       price: this.totalPrice,
       customer: 1,
-      table: 1,
+      table: this.tableId,
     });
 
     this.visible = false;

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule, Location } from '@angular/common';
 import { TableModule } from 'primeng/table';
-import { fromEvent, Subscription } from 'rxjs';
+import { combineLatestWith, map, Subscription } from 'rxjs';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { OrdersService } from '@services/orders/orders.service';
 
@@ -14,10 +14,16 @@ import { OrdersService } from '@services/orders/orders.service';
   styleUrl: './table-orders.component.css',
 })
 export class TableOrdersComponent implements OnInit {
-  orderId: string = '';
   currentOrder: any;
 
   private _subs = new Subscription();
+
+  getOrderIdFromParams$ = this.route.queryParamMap.pipe(
+    map((params: ParamMap) => [
+      <string>params.get('tableId'),
+      <string>params.get('orderId'),
+    ])
+  );
 
   constructor(
     private route: ActivatedRoute,
@@ -27,9 +33,8 @@ export class TableOrdersComponent implements OnInit {
 
   ngOnInit() {
     this._subs.add(
-      this.route.queryParamMap.subscribe((params: ParamMap) => {
-        this.orderId = <string>params.get('orderId');
-        this.getAllOrdersForTable();
+      this.getOrderIdFromParams$.subscribe(([tableId, orderId]) => {
+        this.getAllOrdersForTable(tableId, orderId);
       })
     );
   }
@@ -38,9 +43,15 @@ export class TableOrdersComponent implements OnInit {
     this.location.back();
   }
 
-  getAllOrdersForTable() {
-    const currentOrder = <string>localStorage.getItem('current-order');
-    this.currentOrder = JSON.parse(currentOrder);
+  getAllOrdersForTable(tableId: string, orderId: string) {
+    try {
+      const currentOrder = <string>(
+        localStorage.getItem(`current-order-table-${tableId}`)
+      );
+      this.currentOrder = JSON.parse(currentOrder);
+    } catch (err) {
+      this.currentOrder = null;
+    }
   }
 
   cancelOrder(canceledOrder: any) {
@@ -48,7 +59,11 @@ export class TableOrdersComponent implements OnInit {
       (order: any) => order.id !== canceledOrder.id
     );
     this.orderService.updateOrder(this.currentOrder).subscribe(val => {
-      localStorage.setItem('current-order', JSON.stringify(this.currentOrder));
+      const tableId = this.currentOrder.tableId;
+      localStorage.setItem(
+        `current-order-table-${tableId}`,
+        JSON.stringify(this.currentOrder)
+      );
     });
   }
 }

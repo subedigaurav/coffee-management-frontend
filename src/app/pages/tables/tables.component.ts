@@ -40,7 +40,9 @@ export class TablesComponent implements OnInit {
   getTableInfo(): Observable<any> {
     return this.tableService.getTables().pipe(
       tap((tables: any[]) => {
-        this.tables = tables as any[];
+        this.tables = (tables as any[]).sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
       })
     );
   }
@@ -63,6 +65,8 @@ export class TablesComponent implements OnInit {
           .payTableBill(table.id)
           .pipe(
             tap(_ => {
+              // remove current order after bill is paid
+              localStorage.removeItem('current-order-table-' + table.id);
               this.messageService.add({
                 severity: 'info',
                 summary: 'Confirmed',

@@ -7,7 +7,7 @@
   </a>
 </div>
 
-<div *ngIf="currentOrder">
+<div *ngIf="currentOrder; else noOrderTemplate">
   <p-table [value]="currentOrder.order" [tableStyle]="{ 'min-width': '50rem' }">
     <ng-template pTemplate="header">
       <tr>
@@ -21,10 +21,7 @@
         <td>{{ order.coffee_details.name }}</td>
         <td>{{ order.quantity }}</td>
         <td>
-          <p-button
-            severity="danger"
-            size="small"
-            (click)="cancelOrder(order)">
+          <p-button severity="danger" size="small" (click)="cancelOrder(order)">
             Cancel Order
           </p-button>
         </td>
@@ -32,3 +29,5 @@
     </ng-template>
   </p-table>
 </div>
+
+<ng-template #noOrderTemplate>No current orders for this table.</ng-template>

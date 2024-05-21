@@ -21,6 +21,7 @@ import { MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { TableOrdersComponent } from '../table-orders/table-orders.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -48,6 +49,8 @@ import { TableOrdersComponent } from '../table-orders/table-orders.component';
 })
 export class DashboardComponent implements OnInit {
   currentOrder: any;
+  private tableId: string = '';
+  private subs = new Subscription();
 
   constructor(
     private router: Router,
@@ -55,7 +58,12 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.getOrderInfo();
+    this.subs.add(
+      this.route.paramMap.subscribe(res => {
+        this.tableId = <string>res.get('id');
+        this.getOrderInfo();
+      })
+    );
   }
 
   logout() {
@@ -64,8 +72,18 @@ export class DashboardComponent implements OnInit {
   }
 
   getOrderInfo() {
-    const storedCurrentOrder = <string>localStorage.getItem('current-order');
-    this.currentOrder = JSON.parse(storedCurrentOrder);
+    let storedCurrentOrder;
+
+    try {
+      storedCurrentOrder = JSON.parse(
+        <string>localStorage.getItem(`current-order-table-${this.tableId}`)
+      );
+    } catch {
+      storedCurrentOrder = null;
+    }
+
+    const storedTableId = storedCurrentOrder?.table;
+    if (storedTableId === this.tableId) this.currentOrder = storedCurrentOrder;
   }
 
   goToOrderView() {
@@ -73,6 +91,7 @@ export class DashboardComponent implements OnInit {
       relativeTo: this.route,
       queryParams: {
         orderId: this.currentOrder.id,
+        tableId: this.tableId,
       },
     });
   }
